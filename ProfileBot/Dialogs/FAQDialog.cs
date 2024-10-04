@@ -22,7 +22,7 @@ namespace ProfileBot.Dialogs
         public FaqDialog(IConfiguration configuration)
             : base(nameof(FaqDialog))
         {
-            // Initialize CLU settings from configuration
+            
             var cluEndpoint = configuration["CLUSettings:Endpoint"];
             var cluKey = configuration["CLUSettings:Key"];
             _projectName = configuration["CLUSettings:ProjectName"];
@@ -70,10 +70,10 @@ namespace ProfileBot.Dialogs
                 kind = "Conversation"
             };
 
-            // Call the AnalyzeConversationAsync method
+            
             Response response = await _cluClient.AnalyzeConversationAsync(RequestContent.Create(request));
 
-            // Extract the top intent from the response
+            
             string topIntent = "None";
 
             if (response.ContentStream != null)
@@ -88,10 +88,10 @@ namespace ProfileBot.Dialogs
                 }
             }
 
-            // Send back the detected intent
+            
             await stepContext.Context.SendActivityAsync(MessageFactory.Text($"Detected intent: {topIntent}"), cancellationToken);
 
-            // Handle different intents
+            
             switch (topIntent)
             {
                 case "Get Company Overview":

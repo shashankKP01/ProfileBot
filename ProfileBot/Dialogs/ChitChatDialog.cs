@@ -13,8 +13,8 @@ namespace ProfileBot.Dialogs
     {
         private readonly QuestionAnsweringClient _questionAnsweringClient;
         private readonly IConfiguration _configuration;
-        private readonly string projectName = "UserProfile"; // Replace with your actual project name
-        private readonly string deploymentName = "production"; // Your deployment name
+        private readonly string projectName = "UserProfile"; 
+        private readonly string deploymentName = "production";
 
         public ChitChatDialog()
             : base(nameof(ChitChatDialog))
@@ -48,7 +48,7 @@ namespace ProfileBot.Dialogs
 
         private async Task<DialogTurnResult> AskQuestionStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            // Ask the user for their question
+           
             return await stepContext.PromptAsync(nameof(TextPrompt),
                 new PromptOptions { Prompt = MessageFactory.Text("What would you like to ask? Type 'Exit' to go back to the menu.") },
                 cancellationToken);
@@ -58,7 +58,7 @@ namespace ProfileBot.Dialogs
         {
             string userQuestion = (string)stepContext.Result;
 
-            // Check if the user wants to exit
+            
             if (string.Equals(userQuestion, "Exit", StringComparison.OrdinalIgnoreCase))
             {
                 await stepContext.Context.SendActivityAsync(MessageFactory.Text("Exiting Chit Chat. Returning to the main menu."), cancellationToken);
@@ -69,9 +69,9 @@ namespace ProfileBot.Dialogs
             //var deploymentName = _configuration["ChitChatSettings:DeploymentName"];
 
 
-            // Call the Azure Language Service with confidence threshold
+            
             var project = new QuestionAnsweringProject(projectName, deploymentName);
-            var options = new AnswersOptions { ConfidenceThreshold = 0.5 }; // Add threshold
+            var options = new AnswersOptions { ConfidenceThreshold = 0.5 }; 
 
             Response<AnswersResult> response = await _questionAnsweringClient.GetAnswersAsync(userQuestion, project, options, cancellationToken);
 

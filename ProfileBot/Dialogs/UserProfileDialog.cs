@@ -125,7 +125,6 @@ namespace ProfileBot.Bots
 
             await _userProfileAccessor.SetAsync(stepContext.Context, userProfile, cancellationToken);
 
-            //var attachment = CreateProfileAdaptiveCard(userProfile);
             var attachment= ProfileCards.CreateProfileAdaptiveCard(userProfile);
             await stepContext.Context.SendActivityAsync(MessageFactory.Attachment(attachment), cancellationToken);
 
@@ -166,8 +165,7 @@ namespace ProfileBot.Bots
             var actionData = stepContext.Context.Activity.Value as Newtonsoft.Json.Linq.JObject;
 
             if (actionData != null)
-            {
-                // Extract and update profile details from adaptive card data
+            {  
                 userProfile.Name = actionData["Name"]?.ToString() ?? userProfile.Name;
                 userProfile.Age = int.TryParse(actionData["Age"]?.ToString(), out var age) ? age : userProfile.Age;
                 userProfile.City = actionData["City"]?.ToString() ?? userProfile.City;
@@ -178,7 +176,6 @@ namespace ProfileBot.Bots
 
             try
             {
-                // Save profile using AzureTableHelper
                 await _tableHelper.SaveUserProfileAsync(userProfile);
                 await stepContext.Context.SendActivityAsync(MessageFactory.Text("Your details have been saved to Azure Table Storage."), cancellationToken);
             }
@@ -201,7 +198,7 @@ namespace ProfileBot.Bots
         private static Task<bool> PhoneNumberValidatorAsync(PromptValidatorContext<string> promptContext, CancellationToken cancellationToken)
         {
             var phoneNumber = promptContext.Recognized.Value;
-            var phonePattern = @"^\d{10}$"; // Regular expression for 10-digit phone numbers
+            var phonePattern = @"^\d{10}$"; 
             return Task.FromResult(Regex.IsMatch(phoneNumber, phonePattern));
         }
 

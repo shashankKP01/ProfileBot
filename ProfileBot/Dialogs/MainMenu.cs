@@ -41,7 +41,7 @@ namespace ProfileBot.Bots
             AddDialog(new WaterfallDialog(nameof(WaterfallDialog), waterfallSteps));
             AddDialog(new UserProfileDialog(userState, tableHelper));
             AddDialog(new ChitChatDialog());
-            AddDialog(new FaqDialog(_configuration)); // Add FaqDialog here
+            AddDialog(new FaqDialog(_configuration)); 
             AddDialog(new ChoicePrompt(nameof(ChoicePrompt)));
 
             InitialDialogId = nameof(WaterfallDialog);
@@ -74,7 +74,7 @@ namespace ProfileBot.Bots
             {
                 return await stepContext.BeginDialogAsync(nameof(ChitChatDialog), null, cancellationToken);
             }
-            else if (selectedOption == "FAQ") // Handle FAQ here
+            else if (selectedOption == "FAQ") 
             {
                 return await stepContext.BeginDialogAsync(nameof(FaqDialog), null, cancellationToken);
             }
@@ -84,7 +84,7 @@ namespace ProfileBot.Bots
 
         private async Task<DialogTurnResult> RestartMainMenuStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            return await stepContext.ReplaceDialogAsync(InitialDialogId,null,cancellationToken);
+            return await stepContext.ReplaceDialogAsync(InitialDialogId, null, cancellationToken);
         }
     }
 }
