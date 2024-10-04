@@ -24,22 +24,24 @@ namespace ProfileBot.Bots
 
         private readonly AzureTableHelper _tableHelper;
 
-        public MainMenu(UserState userState, AzureTableHelper tableHelper)
+        public MainMenu(UserState userState, AzureTableHelper tableHelper, IConfiguration configuration)
     : base(nameof(MainMenu))
         {
+            _configuration = configuration;
             _userProfileAccessor = userState.CreateProperty<UserProfile>("UserProfile");
             _tableHelper = tableHelper;
 
             var waterfallSteps = new WaterfallStep[]
             {
-                ShowOptionsStepAsync,
-                HandleOptionSelectionStepAsync,
-                RestartMainMenuStepAsync
+        ShowOptionsStepAsync,
+        HandleOptionSelectionStepAsync,
+        RestartMainMenuStepAsync
             };
 
             AddDialog(new WaterfallDialog(nameof(WaterfallDialog), waterfallSteps));
-            AddDialog(new UserProfileDialog(userState, tableHelper)); // Pass userState and tableHelper
+            AddDialog(new UserProfileDialog(userState, tableHelper));
             AddDialog(new ChitChatDialog());
+            AddDialog(new FaqDialog(_configuration)); // Add FaqDialog here
             AddDialog(new ChoicePrompt(nameof(ChoicePrompt)));
 
             InitialDialogId = nameof(WaterfallDialog);
@@ -50,7 +52,8 @@ namespace ProfileBot.Bots
             var options = new List<Choice>
             {
                 new Choice{Value="Create Profile"},
-                new Choice{Value="Chit Chat"}
+                new Choice{Value="Chit Chat"},
+                new Choice{Value="FAQ"}
             };
             return await stepContext.PromptAsync(nameof(ChoicePrompt), new PromptOptions
             {
@@ -65,17 +68,20 @@ namespace ProfileBot.Bots
 
             if (selectedOption == "Create Profile")
             {
-                // Begin the UserProfileDialog and wait for it to complete
                 return await stepContext.BeginDialogAsync(nameof(UserProfileDialog), null, cancellationToken);
             }
             else if (selectedOption == "Chit Chat")
             {
-                // Begin the ChitChatDialog and wait for it to complete
                 return await stepContext.BeginDialogAsync(nameof(ChitChatDialog), null, cancellationToken);
+            }
+            else if (selectedOption == "FAQ") // Handle FAQ here
+            {
+                return await stepContext.BeginDialogAsync(nameof(FaqDialog), null, cancellationToken);
             }
 
             return await stepContext.EndDialogAsync(cancellationToken: cancellationToken);
         }
+
         private async Task<DialogTurnResult> RestartMainMenuStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
             return await stepContext.ReplaceDialogAsync(InitialDialogId,null,cancellationToken);
