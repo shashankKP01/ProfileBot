@@ -1,0 +1,345 @@
+﻿<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+    <script src="https://cdn.botframework.com/botframework-webchat/latest/webchat.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>FNF National Agency Website</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="/Styles.css" rel="stylesheet" />
+    @*<script src="/script.js"></script>*@
+</head>
+<body>
+    @*<div id="boticon" onclick="myFunction()"></div>*@
+    <div id="botsection">
+        <div id="bothead">Contact Us<span style="float: right;font-size: 20px;margin: -10px 5px 0px 0px;cursor: pointer;"><b style="margin-right: 3px;font-size: 27px;/* margin-top: 28px; */">-</b><b><i class="fa fa-times" aria-hidden="true"></i></b></span></div>
+        <div id="botsubhead">
+            <img class="headimage" src="~/images/FNFNAWLogo_chatbot.png"  align="left">
+            <div>
+                <div id="title">Virtual Assistant</div>
+                <div>How can we help you today?</div>
+            </div>
+        </div>
+        <div id="bot"></div>
+    </div>
+</body>
+</html>
+<script>
+
+
+    function myFunction() {
+        document.getElementById("botsection").style.display = "block";
+        document.getElementById('boticon').style.display = "none";
+    }
+
+    function show() {
+        document.getElementById("botsection").style.display = "none";
+        document.getElementById('boticon').style.display = "block";
+    }
+
+    (async function () {
+        const store = window.WebChat.createStore({}, ({ dispatch }) => next => action => {
+
+            if (action.type === 'DIRECT_LINE/INCOMING_ACTIVITY') {
+                try {
+                    document.querySelector('[role="feed"]').lastChild.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                } catch (err) {
+                }
+            }
+            var buttonsToDisable = ['Title Agent', 'Find a Person or a Place', 'Current Agents Needing Info', 'Education and Training', 'Underwriting Related', 'Production Transaction Related', 'Communications or Marketing', 'Yes', 'No', 'Submit'];
+            $("button.ac-pushButton.style-default").click(function () {
+                $(':button').each(function (index) {
+                    if (buttonsToDisable.indexOf($(this).attr('title')) > -1) {
+                        $(this).prop('disabled', true);
+                    }
+                });
+            });
+
+            var buttonLength = $("[aria-roledescription='attachment']").length;
+            var msgButtons = $("[aria-roledescription='attachment']").toArray();
+            if (buttonLength > 1) {
+                for (let i = 0; i < (buttonLength - 1); i++) {
+                    $(msgButtons[i]).find("button").each(function (index) {
+                        //console.log('Title:' + $(this).attr('title'));
+                        if (buttonsToDisable.indexOf($(this).attr('title')) > -1) {
+                            $(this).prop('disabled', true);
+                        }
+                    });
+                }
+            }
+
+            //$('#SelectedRegion select').select2();
+
+            return next(action);
+        });
+
+        //const webSpeechPonyfillFactory = await window.WebChat.createCognitiveServicesSpeechServicesPonyfillFactory({
+        //    credentials: {
+        //        region: 'eastus',
+        //        subscriptionKey: 'fc44194ea7bd47d9a92efd4be61643bc'
+        //    }
+        //});
+
+        webChat = window.WebChat.renderWebChat(
+            {
+                directLine: window.WebChat.createDirectLine({
+                    token: '@ViewBag.Token'
+                }),
+               // webSpeechPonyfillFactory: webSpeechPonyfillFactory,
+                //adapters,
+                styleOptions: {
+                    bubbleBackground: 'white',
+                    transcriptActivityVisualKeyboardIndicatorColor: 'Red',
+                    transcriptActivityVisualKeyboardIndicatorStyle: 'none',
+                    transcriptActivityVisualKeyboardIndicatorWidth: 1,
+                    transcriptVisualKeyboardIndicatorColor: 'Green',
+                    transcriptVisualKeyboardIndicatorStyle: 'none',
+                    transcriptVisualKeyboardIndicatorWidth: 2,
+                    transcriptOverlayButtonBackground: 'rgba(0, 0, 0, .6)',
+                    transcriptOverlayButtonBackgroundOnFocus: 'rgba(0, 0, 0, .8)',
+                    transcriptOverlayButtonBackgroundOnHover: 'rgba(0, 0, 0, .8)',
+                    transcriptOverlayButtonColor: 'White',
+                    transcriptOverlayButtonColorOnFocus: 'yellow',
+                    transcriptOverlayButtonColorOnHover: 'pink',
+                    messageActivityWordBreak: 'break-word',
+                    bubbleTextColor: '#666',
+                    bubbleFromUserBackground: '#FBFBFB',
+                    //suggestedActionBackground: 'Red',
+                    fontSizeSmall: '80%',
+                    hideUploadButton: true,
+                    //sendBoxHeight: 30,
+                    //sendBoxButtonColor: '#f37435',
+                    //sendBoxBorderTop: 'solid 1px #E6E6E6',
+                    bubbleBorderRadius: 10,
+                    bubbleMaxWidth: '90%',
+                    bubbleFromUserBorderRadius: 10,
+                    suggestedActionBorderRadius: 35,
+                    suggestedActionLayout: 'carousel',
+                    //messageActivityWordBreak: 'keep-all',
+                    suggestedActionBorderWidth: 2,
+                    newMessagesButtonFontSize: '85%',
+                    //sendBoxPlaceholderContent: "hi",
+                    botAvatarInitials: 'VA',
+                    avatarBorderRadius: '50%',
+                    avatarSize: 30,
+                    botAvatarImage: '/Images/chatboticon.png',
+                    botAvatarBackgroundColor: '#f7f7f7',
+                    backgroundColor: '#EEEEEE',
+                    userAvatarImage: '/Images/bot-user.png',
+                    userAvatarInitials: '',
+                    rootHeight: '100%',
+                    rootWidth: '100%',
+                    primaryFont: "'Montserrat','Arial','sans-serif'",
+                    backgroundColor: '#f9f8f6',
+                },
+                sendTypingIndicator: true,
+                store,
+                userID: 'useridnotprovided@test.com',
+                username: 'useridnotprovided'
+            },
+            document.getElementById('bot')
+        );       
+
+        //$(document).ready(function () {
+        //    // Append mic icon to DirectLine channel
+        //    var micIcon = '<i class="fa fa-microphone btn btn-danger" aria-hidden="true" onclick="startConverting();"></i>';
+        //    $(".webchat__send-box-text-box__input").after(micIcon);
+        //});
+
+        $(document).ready(function () {
+            // Append mic icon to DirectLine channel
+            var micIcon = '<i class="fa fa-microphone btn btn-danger" aria-hidden="true"></i>';
+            $(".webchat__send-box-text-box__input").after(micIcon);
+
+            // Create new SpeechRecognition object
+            var recognition = new webkitSpeechRecognition();
+
+            // Set recognition parameters
+            recognition.continuous = false;
+            recognition.interimResults = false;
+            recognition.lang = 'en-US';
+
+            // When recognition results are available
+            //recognition.onresult = function (event) {
+            //    var micResult = event.results[0][0].transcript;
+            //    $(".webchat__send-box-text-box__input").val(micResult);
+            //};
+
+            recognition.onresult = function (event) {
+                var micResult = event.results[0][0].transcript;
+                console.log('Speech-to-text result: ' + micResult);
+                sendMsg(micResult);
+            };
+
+            // When recognition errors occur
+            recognition.onerror = function (event) {
+                console.log('Speech recognition error occurred: ' + event.error);
+            };
+
+            // Attach click event handler to mic icon
+            $(document).on('click', '.fa-microphone', function () {
+                // Start recognition
+                recognition.start();
+            });
+        });
+
+        //$(document).ready(function () {
+        //    // Append mic icon to Direct Line channel
+        //    var micIcon = '<i class="fa fa-microphone btn btn-danger" aria-hidden="true"></i>';
+        //    $(".webchat__send-box-text-box__input").after(micIcon);
+
+        //    // Update input text box value with mic result and send message to bot
+        //    $('.fa-microphone').click(function () {
+        //        // Code to start speech-to-text conversion and retrieve result
+        //        var recognition = new webkitSpeechRecognition();
+        //        recognition.onresult = function (event) {
+        //            var micResult = event.results[0][0].transcript;
+        //            console.log('Speech-to-text result: ' + micResult);
+
+        //            // Update input value
+        //            $(".webchat__send-box-text-box__input").val(micResult);
+
+        //            // Send message to bot using Direct Line JavaScript library
+        //            var botConnection = new DirectLine.DirectLine({ secret: 'wZapxRSfQmI.ide3R_xwIh2PQjFwcB6bxbE55YQx0FGiz4dHZfrtjD8' });
+        //            botConnection.postActivity({
+        //                type: 'message',
+        //                text: micResult,
+                        
+        //            }).subscribe(id => console.log("Posted activity, assigned ID ", id));
+        //        };
+        //        recognition.start();
+        //    });
+        //});
+
+
+        //var lastIndex = $(".webchat__bubble__content").length - 1;
+        //var lastMessageText = $(".webchat__bubble__content")[lastIndex].innerText;
+
+        //// Create a new SpeechSynthesisUtterance instance
+        //var utterance = new SpeechSynthesisUtterance(lastMessageText);
+
+        //// Use the SpeechSynthesis API to speak the text
+        //window.speechSynthesis.speak(utterance);
+
+
+
+        //$('.webchat__send-box-text-box__input').click(BotAutoSuggestion);
+        $('input.webchat__send-box-text-box__input')[0].placeholder = "Please type your question here";
+        $('<img id="homeicon" class="webchat__send-box__button webchat__send-box__button--align-stretch" src="../Images/cc_mainicon.png" style="max-height: 25px;padding-top: 1.5%;padding-left:1%;"/>').insertBefore('.webchat__send-box-text-box');
+        // $('#homeicon').click(function () {
+        //     sendMsg('Main menu');
+        // });
+
+        // function sendMsg(msg){
+        //     store.dispatch({
+        //         type: 'WEB_CHAT/SEND_MESSAGE',
+        //         payload: {
+        //             text: msg
+        //         }
+        //     });
+        // }
+
+        //function startConverting() {
+        //    // Check if SpeechRecognition API is supported
+        //    if ('webkitSpeechRecognition' in window) {
+        //        // Create new SpeechRecognition object
+        //        var recognition = new webkitSpeechRecognition();
+
+        //        // Set recognition parameters
+        //        recognition.continuous = false;
+        //        recognition.interimResults = false;
+        //        recognition.lang = 'en-US';
+
+        //        // Start recognition
+        //        recognition.start();
+
+        //        // When recognition results are available
+        //        recognition.onresult = function (event) {
+        //            var micResult = event.results[0][0].transcript;
+        //            $(".webchat__send-box-text-box__input").val(micResult);
+        //        };
+
+        //        // When recognition ends
+        //        recognition.onend = function () {
+        //            recognition.stop();
+        //        };
+
+        //        // When recognition errors occur
+        //        recognition.onerror = function (event) {
+        //            console.log('Speech recognition error occurred: ' + event.error);
+        //        };
+        //    } else {
+        //        console.log('SpeechRecognition API is not supported.');
+        //    }
+        //}
+
+
+        function BotAutoSuggestion() {
+            let names = [
+                "What is ESCROW?",
+                "What is TITLE SEARCH?",
+                "find an office address",
+                "Castle Connect",
+            ];
+
+            //Sort names in ascending order
+            let sortedNames = names.sort();
+            let input = document.getElementsByClassName("webchat__send-box-text-box__input")[0];
+            //reference
+            $(".webchat__send-box-text-box__input").keypress(function () {
+                //loop through above array
+                //Initially remove all elements ( so if user erases a letter or adds new letter then clean previous outputs)
+                try{
+                    $('.list').remove();
+                } catch (err) { }
+                var newList = $('<ul>').addClass('list');
+                //$('.webchat__send-box-text-box').before(newList);   webchat__send-icon webchat--css-jewus-varv44
+                $('.webchat__send-box__main').before(newList);
+                for (let i of sortedNames) {
+                    //convert input to lowercase and compare with each string  
+                    if (i.toLowerCase().startsWith(input.value.toLowerCase()) && input.value != "") {
+                        //create li element
+                        let listItem = document.createElement("li");
+                        //One common class name
+                        listItem.classList.add("list-items");
+                        listItem.style.cursor = "pointer";
+                        listItem.setAttribute("id", "suggestedItem");
+                        //listItem.setAttribute("onclick", "displayNames('" + i + "')");
+                        //Display matched part in bold
+                        let word = "<b>" + i.substr(0, input.value.length) + "</b>";
+                        word += i.substr(input.value.length);
+                        //display the value in array
+                        listItem.innerHTML = word;
+                        document.querySelector(".list").appendChild(listItem);
+
+                    }
+                }
+            });
+        }
+        $('#suggestedItem').click(function(){
+            debugger;
+            console.log(this.value);
+        });
+
+        $('body').on('click', '#suggestedItem', function () {
+            sendMsg(this.innerText);
+            try {
+                $('.list').remove();
+            } catch (err) { }
+        });
+
+    })().catch(err => console.error('Error Occured : ' + err));
+
+
+
+
+</script>
+
+
+
+
+

@@ -16,13 +16,12 @@ namespace ProfileBot.Dialogs
         private readonly string projectName = "UserProfile"; 
         private readonly string deploymentName = "production";
 
-        public ChitChatDialog()
+        public ChitChatDialog(IConfiguration configuration)
             : base(nameof(ChitChatDialog))
         {
-            string languageEndPoint = Environment.GetEnvironmentVariable("LANGUAGE_ENDPOINT");
-            string languageKey = Environment.GetEnvironmentVariable("LANGUAGE_KEY");
-            //var languageEndPoint = _configuration["ChitChatSettings:LanguageEndPoint"];
-            //var languageKey = _configuration["ChitChatSettings:LanguageKey"];
+            _configuration = configuration;
+            var languageEndPoint = _configuration["ChitChatSettings:LanguageEndPoint"];
+            var languageKey = _configuration["ChitChatSettings:LanguageKey"];
             if (string.IsNullOrEmpty(languageEndPoint) || string.IsNullOrEmpty(languageKey))
             {
                 throw new InvalidOperationException("Environment variables for endpoint or key are not set.");

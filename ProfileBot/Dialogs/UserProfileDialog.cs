@@ -10,6 +10,7 @@ using Microsoft.Bot.Builder;
 using System.Linq;
 using System;
 using ProfileBot.Cards;
+using ProfileBot.Services;
 
 namespace ProfileBot.Bots
 {

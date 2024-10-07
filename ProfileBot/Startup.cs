@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ProfileBot.Bots;
+using ProfileBot.Services;
 
 namespace ProfileBot
 {
@@ -35,7 +36,7 @@ namespace ProfileBot
             services.AddSingleton<IBotFrameworkHttpAdapter, AdapterWithErrorHandler>();
 
             // Add AzureTableHelper instance with proper configuration
-            services.AddSingleton(new AzureTableHelper(Configuration.GetSection("AzureStorage")["ConnectionString"], "UserProfileTable"));
+            services.AddSingleton(new AzureTableHelper(Configuration.GetSection("AzureStorage")["ConnectionString"]));
 
             // Add UserState and ConversationState
             services.AddSingleton<IStorage, MemoryStorage>();

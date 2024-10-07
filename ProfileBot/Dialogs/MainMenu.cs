@@ -9,6 +9,7 @@ using Microsoft.Bot.Builder.Dialogs.Choices;
 using ProfileBot.Dialogs;
 using Azure.AI.Language.QuestionAnswering;
 using Microsoft.Extensions.Configuration;
+using ProfileBot.Services;
 
 
 
@@ -40,7 +41,7 @@ namespace ProfileBot.Bots
 
             AddDialog(new WaterfallDialog(nameof(WaterfallDialog), waterfallSteps));
             AddDialog(new UserProfileDialog(userState, tableHelper));
-            AddDialog(new ChitChatDialog());
+            AddDialog(new ChitChatDialog(_configuration));
             AddDialog(new FaqDialog(_configuration)); 
             AddDialog(new ChoicePrompt(nameof(ChoicePrompt)));
 
